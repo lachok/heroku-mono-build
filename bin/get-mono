@@ -32,7 +32,11 @@ conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.
 # Copy mono from cache to where we're building the slug
 cp -r "${MONO_CACHE_LOCATION}/mono" "/app/mono"
 
+echo "-----> Adding mono to PATH"
+echo "       PATH=${PATH}"
 export PATH="/app/mono/bin:${PATH}"
+echo "-----> Added mono to PATH"
+echo "       PATH=${PATH}"
 export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
 
 echo "-----> Build SUCCESS"
