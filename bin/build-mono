@@ -79,17 +79,14 @@ mkdir -p "$BUILD_DIR"
 
 pushd "$BUILD_DIR"
 
-# zip filename
-MONO_ZIP="mono-$MONO_VERSION.zip"
+MONO_SOURCES_URL="https://github.com/mono/mono.git"
 
-MONO_SOURCES_URL="https://codeload.github.com/mono/mono/zip"
-echo "Downloading zip $MONO_SOURCES_URL/$MONO_VERSION to $MONO_ZIP" | arrow
-curl --url "$MONO_SOURCES_URL/$MONO_VERSION" -o "$MONO_ZIP"
-
-echo "Unpacking" | arrow
-unzip -q "$MONO_ZIP"
+echo "Cloning from git $MONO_VERSION" | arrow
+git clone --recursive "$MONO_SOURCES_URL" "mono-$MONO_VERSION"
 
 pushd "mono-$MONO_VERSION"
+
+git checkout $MONO_VERSION
   
 echo "Configuring" | arrow
 ./autogen.sh --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
