@@ -76,21 +76,40 @@ mkdir -p "$PACKAGE_DIR"
 # tarball filename
 MONO_TARBALL="$MONO_VERSION.tar.bz2"
 
-MONO_SOURCES_URL="http://download.mono-project.com/sources/mono"
-echo "Downloading tarball $MONO_SOURCES_URL/$MONO_TARBALL" | arrow
-curl -O "$MONO_SOURCES_URL/$MONO_TARBALL"
+#MONO_SOURCES_URL="http://download.mono-project.com/sources/mono"
+#echo "Downloading tarball $MONO_SOURCES_URL/$MONO_TARBALL" | arrow
+#curl -O "$MONO_SOURCES_URL/$MONO_TARBALL"
+
+MONO_SOURCES_URL=$1
+MONO_ZIP=$2
+echo "Downloading zip $MONO_SOURCES_URL/$MONO_ZIP" | arrow
+curl -O "$MONO_SOURCES_URL/$MONO_ZIP"
+
+#echo "Unpacking" | arrow
+#tar jxf "$MONO_TARBALL"
 
 echo "Unpacking" | arrow
 tar jxf "$MONO_TARBALL"
 
 pushd "$MONO_VERSION"
 
+#echo "Configuring" | arrow
+#./configure --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
+#  --disable-moonlight --disable-nls | indent
+  
+  
 echo "Configuring" | arrow
-./configure --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
+./autogen.sh --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
   --disable-moonlight --disable-nls | indent
 
+echo "Getting monolite" | arrow
+make get-monolite-latest | indent
+  
+#echo "Building" | arrow
+#make | indent
+
 echo "Building" | arrow
-make | indent
+make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe | indent
 
 echo "Installing" | arrow
 make install | indent

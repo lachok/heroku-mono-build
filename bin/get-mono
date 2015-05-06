@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+DEPENDENCY_S3_BUCKET_PATH="http://s3.amazonaws.com/mono-dependencies"
+MONO_VERSION="3.10.0"
+XSP_VERSION="8a31bc625727594d42f94173768bee5cf8afd0a4"
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+function conditional_download() {
+  DOWNLOAD_URL="$1"
+  DESTINATION="$2"
+
+  if [ ! -d ${DESTINATION} ]; then
+    rm -rf ${DESTINATION}
+    mkdir -p ${DESTINATION}
+    echo "-----> Downloading ${DOWNLOAD_URL}"
+    curl ${DOWNLOAD_URL} -s | tar xz -C ${DESTINATION}
+  fi
+}
+
+LP_DIR=`cd $(dirname $0); cd ..; pwd`
+cd ${BUILD_DIR}
+mkdir -p ${CACHE_DIR}
+
+MONO_CACHE_LOCATION=${CACHE_DIR}/$STACK/mono-${MONO_VERSION}
+conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz ${MONO_CACHE_LOCATION}
+
+# Copy mono from cache to where we're building the slug
+cp -r "${MONO_CACHE_LOCATION}/mono" .
+# Mono expects to be running out of /app
+ln -s "$BUILD_DIR/mono" /app
+
+export PATH="/app/mono/bin:${PATH}"
+export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
+
+echo "-----> Build SUCCESS"
