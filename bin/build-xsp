@@ -45,18 +45,10 @@ fi
 #
 # Utilities ---
 #
+source ./utils
 
-arrow() {
-  while read line; do
-    echo "-----> ${line}"
-  done
-}
-
-indent() {
-  while read line; do
-    echo "       ${line}"
-  done
-}
+echo "Getting mono" | arrow
+source ./get-mono
 
 #
 # Dependencies ---

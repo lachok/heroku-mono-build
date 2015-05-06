@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# bin/utils
+
+arrow() {
+  while read line; do
+    echo "-----> ${line}"
+  done
+}
+
+indent() {
+  while read line; do
+    echo "       ${line}"
+  done
+}

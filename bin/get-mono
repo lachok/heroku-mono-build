@@ -4,6 +4,9 @@
 # fail fast
 set -e
 
+#import utils
+source ./utils
+
 DEPENDENCY_S3_BUCKET_PATH="http://s3.amazonaws.com/mono-dependencies"
 MONO_VERSION="3.10.0"
 XSP_VERSION="8a31bc625727594d42f94173768bee5cf8afd0a4"
@@ -18,7 +21,7 @@ function conditional_download() {
   if [ ! -d ${DESTINATION} ]; then
     rm -rf ${DESTINATION}
     mkdir -p ${DESTINATION}
-    echo "-----> Downloading ${DOWNLOAD_URL}"
+    echo "Downloading ${DOWNLOAD_URL}" | arrow
     curl ${DOWNLOAD_URL} -s | tar xz -C ${DESTINATION}
   fi
 }
@@ -32,11 +35,7 @@ conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.
 # Copy mono from cache to where we're building the slug
 cp -r "${MONO_CACHE_LOCATION}/mono" "/app/mono"
 
-echo "-----> Adding mono to PATH"
-echo "       PATH=${PATH}"
 export PATH="/app/mono/bin:${PATH}"
-echo "-----> Added mono to PATH"
-echo "       PATH=${PATH}"
 export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
 
-echo "-----> Build SUCCESS"
+echo "Build SUCCESS" | arrow

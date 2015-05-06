@@ -51,17 +51,10 @@ fi
 # Utilities ---
 #
 
-arrow() {
-  while read line; do
-    echo "-----> ${line}"
-  done
-}
+source ./utils
 
-indent() {
-  while read line; do
-    echo "       ${line}"
-  done
-}
+echo "Getting mono" | arrow
+source ./get-mono
 
 #
 # Build ---
