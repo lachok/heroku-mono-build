@@ -47,12 +47,18 @@ if [ "$S3_BUCKET" == "" ]; then
   exit 1
 fi
 
-#
-# Utilities ---
-#
 
+MONO_VERSION=$1
+
+if [ "$MONO_VERSION" == "" ]; then
+  echo "need argument: MONO_VERSION"
+  exit 1
+fi
+
+# Utilities
 source ./utils
 
+# Get mono
 echo "Getting mono" | arrow
 source ./get-mono
 
@@ -61,20 +67,23 @@ source ./get-mono
 #
 
 #https://codeload.github.com/mono/mono/zip/017dce9
-MONO_VERSION=$1
 
 echo "Building $MONO_VERSION" | arrow
 
 BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )/.."
-PACKAGE_DIR="/app/.packages"
+PACKAGE_DIR="$BASE_DIR/.packages"
+BUILD_DIR="$BASE_DIR/mono-build"
 mkdir -p "$PACKAGE_DIR"
+
+
+pushd "$BUILD_DIR"
 
 # zip filename
 MONO_ZIP="mono-$MONO_VERSION.zip"
 
 MONO_SOURCES_URL="https://codeload.github.com/mono/mono/zip"
 echo "Downloading zip $MONO_SOURCES_URL/$MONO_VERSION to $MONO_ZIP" | arrow
-curl -O "$MONO_SOURCES_URL/$MONO_VERSION" > "$MONO_ZIP"
+curl --url "$MONO_SOURCES_URL/$MONO_VERSION" -o "$MONO_ZIP"
 
 echo "Unpacking" | arrow
 unzip -q "$MONO_ZIP"
@@ -94,6 +103,7 @@ make EXTERNAL_MCS=mcs | indent
 echo "Installing" | arrow
 make install | indent
 
+popd
 popd
 
 #
