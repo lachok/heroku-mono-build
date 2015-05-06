@@ -60,49 +60,36 @@ source ./get-mono
 # Build ---
 #
 
+#https://codeload.github.com/mono/mono/zip/017dce9
+MONO_VERSION=$1
+
 echo "Building $MONO_VERSION" | arrow
 
 BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )/.."
 PACKAGE_DIR="/app/.packages"
 mkdir -p "$PACKAGE_DIR"
 
-# tarball filename
-MONO_TARBALL="$MONO_VERSION.tar.bz2"
+# zip filename
+MONO_ZIP="mono-$MONO_VERSION.zip"
 
-#MONO_SOURCES_URL="http://download.mono-project.com/sources/mono"
-#echo "Downloading tarball $MONO_SOURCES_URL/$MONO_TARBALL" | arrow
-#curl -O "$MONO_SOURCES_URL/$MONO_TARBALL"
-
-MONO_SOURCES_URL=$1
-MONO_ZIP=$2
-echo "Downloading zip $MONO_SOURCES_URL/$MONO_ZIP" | arrow
-curl -O "$MONO_SOURCES_URL/$MONO_ZIP"
-
-#echo "Unpacking" | arrow
-#tar jxf "$MONO_TARBALL"
+MONO_SOURCES_URL="https://codeload.github.com/mono/mono/zip"
+echo "Downloading zip $MONO_SOURCES_URL/$MONO_VERSION to $MONO_ZIP" | arrow
+curl -O "$MONO_SOURCES_URL/$MONO_VERSION" "$MONO_ZIP"
 
 echo "Unpacking" | arrow
-tar jxf "$MONO_TARBALL"
+unzip -q "$MONO_ZIP"
 
-pushd "$MONO_VERSION"
-
-#echo "Configuring" | arrow
-#./configure --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
-#  --disable-moonlight --disable-nls | indent
-  
+pushd "mono-$MONO_VERSION"
   
 echo "Configuring" | arrow
 ./autogen.sh --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
   --disable-moonlight --disable-nls | indent
 
-echo "Getting monolite" | arrow
-make get-monolite-latest | indent
-  
-#echo "Building" | arrow
-#make | indent
+#echo "Getting monolite" | arrow
+#make get-monolite-latest | indent
 
 echo "Building" | arrow
-make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe | indent
+make EXTERNAL_MCS=mcs | indent
 
 echo "Installing" | arrow
 make install | indent
@@ -114,7 +101,7 @@ popd
 #
 
 # package filename
-MONO_PACKAGE="$MONO_VERSION.tar.gz"
+MONO_PACKAGE="mono-$MONO_VERSION.tar.gz"
 
 echo "Packaging" | arrow
 ( cd "$PACKAGE_DIR" ; tar zcf "$MONO_PACKAGE" mono/ )
