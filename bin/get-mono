@@ -24,6 +24,7 @@ function conditional_download() {
 }
 
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
+echo "-----> mkdir -p ${CACHE_DIR}"
 mkdir -p ${CACHE_DIR}
 
 MONO_CACHE_LOCATION=${CACHE_DIR}/$STACK/mono-${MONO_VERSION}
