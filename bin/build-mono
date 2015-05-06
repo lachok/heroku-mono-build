@@ -74,6 +74,7 @@ BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )/.."
 PACKAGE_DIR="$BASE_DIR/.packages"
 BUILD_DIR="$BASE_DIR/mono-build"
 mkdir -p "$PACKAGE_DIR"
+mkdir -p "$BUILD_DIR"
 
 
 pushd "$BUILD_DIR"
