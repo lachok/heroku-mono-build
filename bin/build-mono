@@ -82,11 +82,11 @@ pushd "$BUILD_DIR"
 MONO_SOURCES_URL="https://github.com/mono/mono.git"
 
 echo "Cloning from git $MONO_VERSION" | arrow
-git clone --recursive "$MONO_SOURCES_URL" "mono-$MONO_VERSION"
+git clone --recursive "$MONO_SOURCES_URL" "mono-$MONO_VERSION" | indent
 
 pushd "mono-$MONO_VERSION"
 
-git checkout $MONO_VERSION
+git checkout $MONO_VERSION | indent
   
 echo "Configuring" | arrow
 ./autogen.sh --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
