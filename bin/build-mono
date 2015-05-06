@@ -48,19 +48,19 @@ if [ "$S3_BUCKET" == "" ]; then
 fi
 
 
-MONO_VERSION=$1
-
-if [ "$MONO_VERSION" == "" ]; then
-  echo "need argument: MONO_VERSION"
-  exit 1
-fi
-
 # Utilities
 source ./utils
 
 # Get mono
 echo "Getting mono" | arrow
 source ./get-mono
+
+MONO_VERSION=$1
+
+if [ "$MONO_VERSION" == "" ]; then
+  echo "need argument: MONO_VERSION"
+  exit 1
+fi
 
 #
 # Build ---
