@@ -56,7 +56,7 @@ source ./get-mono
 
 echo "Building $XSP_VERSION" | arrow
 
-BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
+BASE_DIR=`cd $(dirname $0); cd ..; pwd`
 PACKAGE_DIR="/app/.packages"
 mkdir -p "$PACKAGE_DIR"
 
@@ -103,7 +103,7 @@ echo "Packaging" | arrow
 ( cd "$PACKAGE_DIR" ; tar zcf "$XSP_PACKAGE" xsp/ )
 
 echo "Sending to S3" | arrow
-$BASE_DIR/../support/aws/s3 put "$S3_BUCKET" \
+$BASE_DIR/support/aws/s3 put "$S3_BUCKET" \
   "$XSP_PACKAGE" "$PACKAGE_DIR/$XSP_PACKAGE"
 
 echo "XSP available at https://s3.amazonaws.com/$S3_BUCKET/$XSP_PACKAGE" | arrow

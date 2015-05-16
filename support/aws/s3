@@ -120,7 +120,7 @@ s3_curl() {
   # $5 = mime type
   local bucket remote date sig md5 arg inout headers
   # header handling is kinda fugly, but it works.
-  bucket="${2:+/${2}}/" # slashify the bucket
+  bucket="${2}"
   remote="$(urlenc "${3}")" # if you don't, strange things may happen.
   stdopts="--connect-timeout 10 --fail --silent"
   mime="${5}"
@@ -157,7 +157,7 @@ s3_curl() {
     headers=("${headers[@]}" "Content-MD5: ${md5}")
   fi
   curl ${arg} "${inout}" ${stdopts} -o - -K <(curl_headers "${headers[@]}") \
-    "http://s3.amazonaws.com${bucket}${remote}"
+    "http://${bucket}.s3.amazonaws.com/${remote}"
   return $?
 }
 

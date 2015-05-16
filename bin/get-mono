@@ -37,5 +37,3 @@ cp -r "${MONO_CACHE_LOCATION}/mono" "/app/mono"
 
 export PATH="/app/mono/bin:${PATH}"
 export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
-
-echo "Build SUCCESS" | arrow

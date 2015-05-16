@@ -70,7 +70,7 @@ fi
 
 echo "Building $MONO_VERSION" | arrow
 
-BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )/.."
+BASE_DIR=`cd $(dirname $0); cd ..; pwd`
 PACKAGE_DIR="$BASE_DIR/.packages"
 BUILD_DIR="$BASE_DIR/mono-build"
 mkdir -p "$PACKAGE_DIR"
@@ -92,11 +92,8 @@ echo "Configuring" | arrow
 ./autogen.sh --prefix="$PACKAGE_DIR/mono" --sysconfdir="$PACKAGE_DIR/mono" \
   --disable-moonlight --disable-nls | indent
 
-#echo "Getting monolite" | arrow
-#make get-monolite-latest | indent
-
 echo "Building" | arrow
-make EXTERNAL_MCS=mcs | indent
+make | indent
 
 echo "Installing" | arrow
 make install | indent
